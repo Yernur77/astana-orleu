@@ -13,12 +13,12 @@
     "secondaryBtn": "Узнать подробнее"
   },
   "stats": {
-    "experience": "20 лет",
-    "experienceLabel": "опыта обучения",
+    "experience": "10+",
+    "experienceLabel": "лет на рынке",
     "students": "28 000+",
     "studentsLabel": "слушателей",
-    "regions": "16 регионов",
-    "regionsLabel": "охвата"
+    "regions": "20",
+    "regionsLabel": "регионов охвата"
   },
   "directions": {
     "procurement": "Госзакупки",

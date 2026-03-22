@@ -54,7 +54,7 @@ export default function CoursesPage({ params }: CoursesPageProps) {
   return (
     <>
       {/* Header */}
-      <section className="bg-gradient-to-br from-[#1a3a6b] to-[#142a52] text-white py-12 md:py-16">
+      <section className="bg-gradient-to-br from-[#3A7A62] to-[#2d6250] text-white pt-16 pb-12 md:pt-20 md:pb-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">{t.courses.title}</h1>
           <p className="text-lg text-white/80">Выберите курс, который вас интересует</p>
