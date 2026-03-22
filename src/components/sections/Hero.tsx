@@ -1,32 +1,40 @@
 'use client';
 
-import { motion, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 
 interface HeroProps {
   locale: string;
 }
 
-// Animated counter component
 function AnimatedNumber({ value, suffix = '' }: { value: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const motionValue = useMotionValue(0);
-  const springValue = useSpring(motionValue, { damping: 40, stiffness: 120 });
-  const display = useTransform(springValue, (v) => Math.round(v).toLocaleString('ru-RU'));
-  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const [display, setDisplay] = useState(0);
+  const isInView = useInView(ref, { once: true });
 
   useEffect(() => {
-    if (isInView) {
-      motionValue.set(value);
-    }
-  }, [isInView, motionValue, value]);
+    if (!isInView) return;
+    const duration = 1400;
+    const startTime = performance.now();
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(Math.round(value * eased));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+
+    const raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [isInView, value]);
 
   return (
     <span ref={ref}>
-      <motion.span>{display}</motion.span>
+      {display.toLocaleString('ru-RU')}
       {suffix}
     </span>
   );
@@ -45,15 +53,12 @@ const itemVariants = {
 export function Hero({ locale }: HeroProps) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-[#f4faf7] via-white to-[#eef4fb] pt-10 pb-16 md:pt-16 md:pb-24">
-      {/* Decorative blobs */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#3A7A62]/5 rounded-full blur-[120px] -z-10 translate-x-1/3 -translate-y-1/3" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#42B3E0]/6 rounded-full blur-[100px] -z-10 -translate-x-1/4 translate-y-1/4" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left: Text */}
           <motion.div variants={containerVariants} initial="hidden" animate="visible">
-            {/* Eyebrow */}
             <motion.div variants={itemVariants} className="flex items-center gap-2 mb-5">
               <div className="w-8 h-0.5 bg-[#3A7A62]" />
               <span className="text-xs font-semibold text-[#3A7A62] uppercase tracking-widest">
@@ -61,7 +66,6 @@ export function Hero({ locale }: HeroProps) {
               </span>
             </motion.div>
 
-            {/* Heading */}
             <motion.h1
               variants={itemVariants}
               className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-[#0f1923] mb-5 leading-[1.12]"
@@ -71,12 +75,10 @@ export function Hero({ locale }: HeroProps) {
               специалистов
             </motion.h1>
 
-            {/* Subtitle */}
             <motion.p variants={itemVariants} className="text-base md:text-lg text-[#5a6779] mb-8 leading-relaxed max-w-lg">
               Качественное образование в области государственных закупок, бухгалтерии, управления и права. Больше 10 лет подготовки специалистов Казахстана.
             </motion.p>
 
-            {/* CTA buttons */}
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-3 mb-12">
               <Link href={`/${locale}/courses`}>
                 <Button size="lg" variant="primary" className="gap-2">
@@ -91,11 +93,7 @@ export function Hero({ locale }: HeroProps) {
               </Link>
             </motion.div>
 
-            {/* Stats */}
-            <motion.div
-              variants={itemVariants}
-              className="grid grid-cols-3 gap-4 pt-8 border-t border-[#dceee8]"
-            >
+            <motion.div variants={itemVariants} className="grid grid-cols-3 gap-4 pt-8 border-t border-[#dceee8]">
               {[
                 { value: 10, suffix: '+', label: 'лет на рынке' },
                 { value: 28000, suffix: '+', label: 'слушателей' },
@@ -111,7 +109,6 @@ export function Hero({ locale }: HeroProps) {
             </motion.div>
           </motion.div>
 
-          {/* Right: Image */}
           <motion.div
             initial={{ opacity: 0, x: 40, scale: 0.97 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -130,7 +127,6 @@ export function Hero({ locale }: HeroProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f1923]/15 to-transparent" />
             </div>
 
-            {/* Rating card */}
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -150,7 +146,6 @@ export function Hero({ locale }: HeroProps) {
               </div>
             </motion.div>
 
-            {/* Certificate badge */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
