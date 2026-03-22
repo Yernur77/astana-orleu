@@ -1,8 +1,15 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Stats } from '@/components/sections/Stats';
+
+// Remotion: logo reveal animation for About hero
+const LogoPlayer = dynamic(
+  () => import('@/components/remotion/PlayerWrappers').then(m => m.LogoPlayer),
+  { ssr: false }
+);
 
 interface AboutPageProps {
   params: {
@@ -40,10 +47,33 @@ export default function AboutPage({ params }: AboutPageProps) {
   return (
     <>
       {/* Header */}
-      <section className="bg-gradient-to-br from-[#1a3a6b] to-[#142a52] text-white py-12 md:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{t.about.title}</h1>
-          <p className="text-lg text-white/80">Более 20 лет опыта в профессиональном образовании</p>
+      {/* About Hero with Remotion Logo Animation */}
+      <section className="bg-gradient-to-br from-[#EAF5F0] via-[#F0F5FB] to-[#E8EFF8] py-20 md:py-28 pt-28">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 mb-6">
+                <span className="w-8 h-0.5 bg-gradient-to-r from-[#3A7A62] to-[#5AAD62] rounded"/>
+                <span className="text-[11px] uppercase tracking-[1.5px] text-primary font-semibold">
+                  {locale === 'ru' ? 'О компании' : 'Компания туралы'}
+                </span>
+              </div>
+              <h1 className="text-[44px] lg:text-[52px] font-semibold tracking-tight text-text-DEFAULT leading-[1.1] mb-6">
+                {t.about.title}
+              </h1>
+              <p className="text-[17px] text-text-secondary leading-relaxed">
+                {locale === 'ru'
+                  ? 'Более 20 лет мы помогаем специалистам Казахстана развиваться профессионально. Наши программы признаны государственными органами и ведущими компаниями страны.'
+                  : '20 жылдан астам уақыт бойы Қазақстан мамандарының кәсіби өсуіне көмектесіп келеміз.'}
+              </p>
+            </div>
+            {/* Remotion Logo Animation */}
+            <div className="flex justify-center items-center">
+              <div className="w-full max-w-sm aspect-video">
+                <LogoPlayer />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

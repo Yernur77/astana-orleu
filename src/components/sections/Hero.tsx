@@ -3,6 +3,22 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
+
+// Remotion: animated stats counter (SSR disabled — browser only)
+const StatsPlayer = dynamic(
+  () => import('@/components/remotion/PlayerWrappers').then(m => m.StatsPlayer),
+  { ssr: false, loading: () => (
+    <div className="flex items-center gap-8 pt-8 border-t border-divider">
+      {[{ v: '20+', l: 'лет' }, { v: '28 000+', l: 'слушателей' }, { v: '16', l: 'регионов' }].map((s, i) => (
+        <div key={i} className="text-center">
+          <div className="text-[28px] font-bold text-primary">{s.v}</div>
+          <div className="text-[12px] text-text-secondary">{s.l}</div>
+        </div>
+      ))}
+    </div>
+  )}
+);
 
 interface HeroProps {
   locale: string;
@@ -100,22 +116,14 @@ export function Hero({ locale }: HeroProps) {
             </motion.div>
 
             {/* Stats */}
+            {/* Remotion animated stats counter */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex items-center gap-8 pt-8 border-t border-divider"
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="pt-8 border-t border-divider"
             >
-              {[
-                { value: '20+', label: locale === 'ru' ? 'лет на рынке' : 'жыл нарықта' },
-                { value: '28 000+', label: locale === 'ru' ? 'слушателей' : 'тыңдаушы' },
-                { value: '16', label: locale === 'ru' ? 'регионов' : 'өңір' },
-              ].map((stat, i) => (
-                <div key={i} className="text-center">
-                  <div className="text-[28px] font-bold text-primary leading-none mb-1">{stat.value}</div>
-                  <div className="text-[12px] text-text-secondary">{stat.label}</div>
-                </div>
-              ))}
+              <StatsPlayer />
             </motion.div>
           </div>
 
