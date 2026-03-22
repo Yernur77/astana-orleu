@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Card } from '@/components/ui/Card';
 import { reviews } from '@/data/reviews';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -27,13 +26,24 @@ export function Reviews({ locale }: ReviewsProps) {
 
   return (
     <section className="py-16 md:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#0f1923] mb-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 mb-4"
+          >
+            <span className="w-8 h-0.5 bg-gradient-to-r from-[#3A7A62] to-[#5AAD62] rounded"/>
+            <span className="text-label uppercase tracking-[1.5px] text-primary font-semibold text-[11px]">
+              {locale === 'ru' ? 'Отзывы' : 'Пікірлер'}
+            </span>
+          </motion.div>
+          <h2 className="text-4xl md:text-5xl font-semibold text-text-DEFAULT mb-4 tracking-tight">
             {t.reviews.title}
           </h2>
-          <p className="text-lg text-[#6b7a8d]">
-            Что говорят наши выпускники
+          <p className="text-lg text-text-secondary max-w-2xl mx-auto">
+            {locale === 'ru' ? 'Что говорят наши выпускники' : 'Біздің түлектерінің айтары'}
           </p>
         </div>
 
@@ -46,35 +56,35 @@ export function Reviews({ locale }: ReviewsProps) {
         >
           {reviews.map((review) => (
             <motion.div key={review.id} variants={itemVariants}>
-              <Card className="h-full p-6 flex flex-col">
+              <div className="h-full p-6 rounded-card bg-white border border-divider hover:border-primary/40 hover:shadow-card-hover transition-all duration-300 flex flex-col">
                 {/* Stars */}
                 <div className="flex gap-1 mb-4">
                   {Array.from({ length: review.rating }).map((_, i) => (
-                    <span key={i} className="text-xl">
+                    <span key={i} className="text-lg">
                       ⭐
                     </span>
                   ))}
                 </div>
 
                 {/* Review text */}
-                <p className="text-[#6b7a8d] mb-6 flex-grow italic">
+                <p className="text-text-secondary mb-6 flex-grow italic leading-relaxed">
                   &quot;{review.text[locale === 'kz' ? 'kz' : 'ru']}&quot;
                 </p>
 
                 {/* Author info */}
-                <div className="flex items-center gap-4 pt-4 border-t border-[#e2e6ed]">
-                  <div className="w-12 h-12 rounded-full bg-[#1a3a6b] text-white flex items-center justify-center font-bold text-sm">
+                <div className="flex items-center gap-4 pt-4 border-t border-divider">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#3A7A62] to-[#5AAD62] text-white flex items-center justify-center font-bold text-sm flex-shrink-0">
                     {review.avatar}
                   </div>
                   <div>
-                    <p className="font-semibold text-[#0f1923]">{review.name}</p>
-                    <p className="text-sm text-[#6b7a8d]">
+                    <p className="font-semibold text-text-DEFAULT">{review.name}</p>
+                    <p className="text-sm text-text-secondary">
                       {review.position[locale === 'kz' ? 'kz' : 'ru']}
                     </p>
-                    <p className="text-xs text-[#6b7a8d]">{review.company}</p>
+                    <p className="text-xs text-text-secondary/70">{review.company}</p>
                   </div>
                 </div>
-              </Card>
+              </div>
             </motion.div>
           ))}
         </motion.div>
